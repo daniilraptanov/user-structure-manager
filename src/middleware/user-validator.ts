@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import User from "../db/models/user";
 import { apiSchemasBadRequest } from "../errors/http-errors";
 import { changeBossSchema } from "../schemas/user-schema";
+import { Role } from "../types/enums/role-enum";
 import { IUser } from "../types/models/user";
 
 export class UserValidator {
@@ -24,6 +25,14 @@ export class UserValidator {
 
       if (!subordinate) {
         return res.status(404).send("Subordinate not found");
+      }
+
+      if (boss.role !== Role.BOSS) {
+        return res.status(400).send("Change user boss can be only boss with role <2>");
+      }
+
+      if (boss.id !== subordinate.bossId) {
+        return res.status(400).send("Boss should changes only he subordinate");
       }
 
       return next();
