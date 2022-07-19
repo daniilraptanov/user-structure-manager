@@ -1,5 +1,6 @@
-import { IFullUserDTO, IUserDTO } from "../dto/user-dto";
+import { IFullUserDTO } from "../dto/user-dto";
+import { IUser } from "../models/user";
 
 export interface IUserService {
-    getRelations(user: IUserDTO, relations: IFullUserDTO[]): Promise<IFullUserDTO[]>;
+    getRelations(user: IUser): Promise<IFullUserDTO>;
 }

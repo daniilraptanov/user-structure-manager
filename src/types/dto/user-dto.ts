@@ -1,4 +1,5 @@
 import { Role } from "../enums/role-enum";
+import { IUser } from "../models/user";
 import { ILoginDTO } from "./auth-dto";
 
 export interface IUserDTO extends ILoginDTO {
@@ -8,5 +9,5 @@ export interface IUserDTO extends ILoginDTO {
 }
 
 export interface IFullUserDTO extends IUserDTO {
-    subordinates?: IFullUserDTO;
+    subordinates: IFullUserDTO[];
 }
