@@ -17,6 +17,7 @@ export class UserValidator {
       }
 
       const subordinate: IUser = await User.findById(subordinateId);
+      const currentBoss: IUser = await User.findById(req["user"].userId);
       const boss: IUser = await User.findById(toBossId);
 
       if (!boss) {
@@ -27,11 +28,15 @@ export class UserValidator {
         return res.status(404).send("Subordinate not found");
       }
 
-      if (boss.role !== Role.BOSS) {
+      if (currentBoss.role !== Role.BOSS) {
         return res.status(400).send("Change user boss can be only boss with role <2>");
       }
 
-      if (boss.id !== subordinate.bossId) {
+      if (boss.role !== Role.BOSS) {
+        return res.status(400).send("New user boss can be only boss with role <2>");
+      }
+
+      if (currentBoss.id !== subordinate.bossId) {
         return res.status(400).send("Boss should changes only he subordinate");
       }
 
