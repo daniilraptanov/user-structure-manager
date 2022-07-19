@@ -6,3 +6,7 @@ export interface IUserDTO extends ILoginDTO {
     role: Role;
     bossId: string;
 }
+
+export interface IFullUserDTO extends IUserDTO {
+    subordinates?: IFullUserDTO;
+}
