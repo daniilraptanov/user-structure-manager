@@ -5,6 +5,8 @@ import { StatusCodes } from "http-status-codes";
 export class UserController {
     static async getUserWithRelations(req: Request, res: Response) {
         try {
+            const role = req["user"];
+
             
         } catch (err) {
             console.log(err);

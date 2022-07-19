@@ -4,8 +4,9 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import User from "../db/models/user";
 import { apiSchemasBadRequest } from "../errors/http-errors";
-import { loginSchema } from "../schemas/auth-schema";
+import { loginSchema, registerSchema } from "../schemas/auth-schema";
 import { AuthServiceImpl } from "../services/auth-service";
+import { Role } from "../types/enums/role-enum";
 import { IUser } from "../types/models/user";
 
 export class AuthValidator {
@@ -20,11 +21,11 @@ export class AuthValidator {
       const authService = new AuthServiceImpl();
 
       const user: IUser = await User.findOne().where({ login: login });
-      if (user) {
+      if (!user) {
         return res.status(400).send("User does not exist");
       }
 
-      if (!(await authService.checkPasswordHash(user.login, user.password))) {
+      if (!(await authService.checkPasswordHash(login, password))) {
         return res.status(400).send("Password does not correct");
       }
 
@@ -42,7 +43,7 @@ export class AuthValidator {
   ) {
     try {
       const { login, password, confirmPassword, role, bossId } = req.body;
-      const { error } = loginSchema.validate({
+      const { error } = registerSchema.validate({
         login,
         password,
         confirmPassword,
@@ -55,7 +56,7 @@ export class AuthValidator {
       }
 
       const boss: IUser = await User.findById(bossId);
-      if (!boss) {
+      if (!boss && (role !== Role.ADMIN)) {
         return res.status(404).send("Boss not found");
       }
 

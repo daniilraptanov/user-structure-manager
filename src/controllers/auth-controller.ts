@@ -4,6 +4,7 @@ import User from "../db/models/user";
 import { AuthServiceImpl } from "../services/auth-service";
 import { ILoginDTO } from "../types/dto/auth-dto";
 import { IUserDTO } from "../types/dto/user-dto";
+import { Role } from "../types/enums/role-enum";
 import { IUser } from "../types/models/user";
 
 export class AuthController {
@@ -32,15 +33,16 @@ export class AuthController {
       const authService = new AuthServiceImpl();
 
       const data: IUserDTO = req.body;
-      const user: IUser = await new User({
+      const user = await new User({
         ...data,
-        password: await authService.hashedPassword(data.password),
+        password: await authService.hashedPassword(data.password)
       });
 
       if (!user) {
         res.status(500).send("User does not created!");
       }
 
+      await user.save();
       res.status(201).send("User was created");
     } catch (err) {
       console.log(err);

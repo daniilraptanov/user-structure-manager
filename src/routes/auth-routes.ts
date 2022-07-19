@@ -6,7 +6,6 @@ const router = Router();
 
 router.post(
     "/auth/login",
-    AuthValidator.auth,
     AuthValidator.checkLoginData,
     AuthController.login
 );

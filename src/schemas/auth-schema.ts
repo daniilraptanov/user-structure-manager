@@ -10,9 +10,15 @@ export const loginSchema = Joi.object({
 export const registerSchema = loginSchema.append({
     confirmPassword: Joi.string().min(5).required(),
     role: Joi.number().valid(Role.ADMIN, Role.BOSS, Role.USER).required(),
-    bossId: Joi.string().required()
-}).custom(schema => {
+    bossId: Joi.string()
+}).custom((schema) => {
     if (schema.password !== schema.confirmPassword) {
-        throw Error("Confirmed your password!");
+        throw new Error("Confirm your password!");
     }
+
+    if ((schema.role !== Role.ADMIN) && !schema.bossId) {
+        throw new Error("bossId is required if role does not equal ADMIN");
+    }
+
+    return schema;
 });

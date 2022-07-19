@@ -7,7 +7,7 @@ import { IAuthService } from "../types/services/auth-service";
 
 export class AuthServiceImpl implements IAuthService {
   async checkPasswordHash(login: string, password: string): Promise<boolean> {
-    const hash: string = (await User.findOne().where({ login: login }))
+    const hash: string = await (await User.findOne().where({ login: login }))
       .password;
     return await bcrypt.compare(password, hash);
   }
