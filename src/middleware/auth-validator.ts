@@ -68,10 +68,13 @@ export class AuthValidator {
       switch (role) {
         case Role.ADMIN:
           if (bossId) return res.status(400).send("Admin does not have a boss");
+          break;
         case Role.BOSS:
           if (boss.role !== Role.ADMIN) return res.status(400).send("Boss must have a boss with role <1>");
+          break;
         case Role.USER:
           if (boss.role !== Role.BOSS) return res.status(400).send("User must have a boss with role <2>");
+          break;
       }
 
       return next();
